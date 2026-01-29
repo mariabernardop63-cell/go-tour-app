@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, ArrowLeft } from 'lucide-react';
+import { User, Mail, Phone, Lock, ArrowLeft, Globe, ChevronDown } from 'lucide-react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
-import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
 import SocialButton from '../../components/SocialButton/SocialButton';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { countries } from '../../data/countries';
+import { translations, languages } from '../../data/translations';
 import './Signup.css';
 
 const Signup = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [langCode, setLangCode] = useState('en-US');
+    const [showLangMenu, setShowLangMenu] = useState(false);
+
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         phone: '',
-        country: '',
+        nationality: '', // Stores country code
         dobDay: '',
         dobMonth: '',
         dobYear: '',
@@ -24,29 +28,81 @@ const Signup = () => {
     });
     const [errors, setErrors] = useState({});
 
+    const t = translations[langCode] || translations['en-US'];
+
+    // IP Detection
+    useEffect(() => {
+        const detectIP = async () => {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+
+                if (data && data.country_code) {
+                    const detectedCountry = countries.find(c => c.code === data.country_code);
+                    if (detectedCountry) {
+                        setFormData(prev => ({
+                            ...prev,
+                            nationality: detectedCountry.code,
+                            phone: detectedCountry.dialCode + ' '
+                        }));
+
+                        // Set language if matches known mapping
+                        if (detectedCountry.lang && translations[detectedCountry.lang]) {
+                            setLangCode(detectedCountry.lang);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("IP Detection failed:", error);
+                // Silently fail to defaults
+            }
+        };
+        detectIP();
+    }, []);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        // Clear error for this field
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: '' });
         }
     };
 
-    const handleCountryChange = (countryCode) => {
-        setFormData({ ...formData, country: countryCode });
-        if (errors.country) setErrors({ ...errors, country: '' });
+    const handleNationalityChange = (e) => {
+        const code = e.target.value;
+        const country = countries.find(c => c.code === code);
+        setFormData(prev => ({
+            ...prev,
+            nationality: code,
+            phone: country ? country.dialCode + ' ' : prev.phone
+        }));
+    };
+
+    const handleLanguageSelect = (code) => {
+        setLangCode(code);
+        setShowLangMenu(false);
     };
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.fullName) newErrors.fullName = 'Full Name is required';
-        if (!formData.email) newErrors.email = 'Email is required';
-        if (!formData.country) newErrors.country = 'Country is required';
-        if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) newErrors.dob = 'Date of birth is required';
 
-        if (!formData.password) newErrors.password = 'Password is required';
-        if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 chars';
-        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+        // Name Validation: First + Last + Vowels
+        const nameTrimmed = formData.fullName.trim();
+        const hasSpace = nameTrimmed.indexOf(' ') > 0;
+        const hasVowel = /[aeiouAEIOU]/.test(nameTrimmed); // Basic vowel check
+
+        if (!formData.fullName) {
+            newErrors.fullName = `${t.fullName} ${t.errors.required}`;
+        } else if (!hasSpace || !hasVowel) {
+            newErrors.fullName = t.errors.name;
+        }
+
+        if (!formData.email) newErrors.email = t.errors.email;
+        if (!formData.nationality) newErrors.nationality = `${t.nationality} ${t.errors.required}`;
+        if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) newErrors.dob = `${t.dob} ${t.errors.required}`;
+
+        if (!formData.password) newErrors.password = t.errors.required;
+        if (formData.password.length < 6) newErrors.password = t.errors.passwordLen;
+        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = t.errors.match;
 
         return newErrors;
     };
@@ -63,7 +119,7 @@ const Signup = () => {
         // Mock API
         setTimeout(() => {
             setIsLoading(false);
-            alert("Registration Successful! (Mock)");
+            alert("Registration Successful!"); // Translation needed?
             navigate('/login');
         }, 2000);
     };
@@ -73,9 +129,31 @@ const Signup = () => {
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
+    const currentLang = languages.find(l => l.code === langCode);
+
     return (
         <div className="signup-page fade-in">
             {isLoading && <LoadingSpinner fullScreen text="Creating Account..." />}
+
+            {/* Language Switcher */}
+            <div className={`lang-switcher ${showLangMenu ? 'active' : ''}`}>
+                <button className="lang-btn" onClick={() => setShowLangMenu(!showLangMenu)} type="button">
+                    <span className="lang-flag">{currentLang?.flag}</span>
+                    <span className="lang-name">{currentLang?.code.toUpperCase()}</span>
+                    <ChevronDown size={14} className={`lang-arrow ${showLangMenu ? 'rotate' : ''}`} />
+                </button>
+
+                {showLangMenu && (
+                    <div className="lang-menu scale-in">
+                        {languages.map(l => (
+                            <div key={l.code} className="lang-option" onClick={() => handleLanguageSelect(l.code)}>
+                                <span className="lang-flag">{l.flag}</span>
+                                {l.name}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <div className="signup-container slide-up">
                 <button
@@ -87,16 +165,17 @@ const Signup = () => {
                 </button>
 
                 <div className="signup-header">
-                    <h1 className="signup-title">Create Account</h1>
-                    <p className="signup-subtitle">Join the community of explorers today.</p>
+                    <h1 className="signup-title">{t.title}</h1>
+                    <p className="signup-subtitle">{t.subtitle}</p>
                 </div>
 
                 <form className="signup-form" onSubmit={handleRegister}>
                     {/* Personal Info */}
-                    <div className="form-section-title">Personal Information</div>
+                    <div className="form-section-title">{t.personalInfo}</div>
                     <Input
-                        label="Full Name"
+                        label={t.fullName}
                         name="fullName"
+                        placeholder={t.fullNamePlaceholder} // Use translations for placeholders too if Input supports it visible
                         icon={User}
                         value={formData.fullName}
                         onChange={handleChange}
@@ -104,7 +183,7 @@ const Signup = () => {
                     />
 
                     <Input
-                        label="Email Address"
+                        label={t.email}
                         name="email"
                         type="email"
                         icon={Mail}
@@ -113,8 +192,31 @@ const Signup = () => {
                         error={errors.email}
                     />
 
+                    {/* Nationality Select (Replaces CountryDropdown) */}
+                    <div className="input-group">
+                        <div className="input-wrapper">
+                            <span className="input-icon" style={{ fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {formData.nationality ? countries.find(c => c.code === formData.nationality)?.flag : <Globe size={20} />}
+                            </span>
+                            <select
+                                name="nationality"
+                                className={`input-field has-icon ${formData.nationality ? 'has-value' : ''}`}
+                                value={formData.nationality}
+                                onChange={handleNationalityChange}
+                            >
+                                <option value="" disabled></option>
+                                {countries.map(c => (
+                                    <option key={c.code} value={c.code}>{c.name}</option>
+                                ))}
+                            </select>
+                            <label className="input-label with-icon">{t.nationality}</label>
+                            <div className="input-border"></div>
+                        </div>
+                        {errors.nationality && <span className="input-error-msg">{errors.nationality}</span>}
+                    </div>
+
                     <Input
-                        label="Phone Number (Optional)"
+                        label={t.phone}
                         name="phone"
                         type="tel"
                         icon={Phone}
@@ -122,16 +224,9 @@ const Signup = () => {
                         onChange={handleChange}
                     />
 
-                    <CountryDropdown
-                        label="Country of Birth"
-                        value={formData.country}
-                        onChange={handleCountryChange}
-                    />
-                    {errors.country && <span className="input-error-msg" style={{ marginTop: -12 }}>{errors.country}</span>}
-
                     {/* Date of Birth */}
                     <div className="input-group">
-                        <label className="input-label-static">Date of Birth</label>
+                        <label className="input-label-static">{t.dob}</label>
                         <div style={{ display: 'grid', gridTemplateColumns: '80px 100px 1fr', gap: 10 }}>
                             <div className="input-wrapper">
                                 <select
@@ -141,7 +236,7 @@ const Signup = () => {
                                     onChange={handleChange}
                                     style={{ paddingLeft: '16px' }}
                                 >
-                                    <option value="">Day</option>
+                                    <option value="">DD</option>
                                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                                 </select>
                             </div>
@@ -153,7 +248,7 @@ const Signup = () => {
                                     onChange={handleChange}
                                     style={{ paddingLeft: '16px' }}
                                 >
-                                    <option value="">Month</option>
+                                    <option value="">MM</option>
                                     {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                                 </select>
                             </div>
@@ -165,7 +260,7 @@ const Signup = () => {
                                     onChange={handleChange}
                                     style={{ paddingLeft: '16px' }}
                                 >
-                                    <option value="">Year</option>
+                                    <option value="">YYYY</option>
                                     {years.map(y => <option key={y} value={y}>{y}</option>)}
                                 </select>
                             </div>
@@ -174,9 +269,9 @@ const Signup = () => {
                     </div>
 
                     {/* Security */}
-                    <div className="form-section-title">Security</div>
+                    <div className="form-section-title">{t.security}</div>
                     <Input
-                        label="Password"
+                        label={t.password}
                         name="password"
                         type="password"
                         icon={Lock}
@@ -186,7 +281,7 @@ const Signup = () => {
                     />
 
                     <Input
-                        label="Confirm Password"
+                        label={t.confirmPassword}
                         name="confirmPassword"
                         type="password"
                         icon={Lock}
@@ -195,9 +290,9 @@ const Signup = () => {
                         error={errors.confirmPassword}
                     />
 
-                    <Button type="submit" fullWidth size="lg" style={{ marginTop: 10 }}>Register</Button>
+                    <Button type="submit" fullWidth size="lg" style={{ marginTop: 10 }}>{t.registerBtn}</Button>
 
-                    <div className="divider">or sign up with</div>
+                    <div className="divider">{t.orSignup}</div>
 
                     <div style={{ display: 'flex', gap: 12 }}>
                         <SocialButton provider="google" onClick={() => { }}>Google</SocialButton>
@@ -206,7 +301,7 @@ const Signup = () => {
                 </form>
 
                 <footer className="auth-footer" style={{ paddingTop: 20 }}>
-                    Already have an account? <span className="auth-link" onClick={() => navigate('/login')}>Log In</span>
+                    {t.alreadyAccount} <span className="auth-link" onClick={() => navigate('/login')}>{t.loginLink}</span>
                 </footer>
             </div>
         </div>

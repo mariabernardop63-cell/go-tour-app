@@ -6,6 +6,8 @@
     padding: var(--spacing-md);
     background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
     position: relative;
+    padding-top: 60px;
+    /* Space for language switcher */
 }
 
 .signup-page::before {
@@ -29,9 +31,8 @@
     border-radius: var(--radius-lg);
     padding: 32px;
     box-shadow: var(--shadow-xl);
-    max-height: 90vh;
+    max-height: 85vh;
     overflow-y: auto;
-    /* Hide scrollbar for cleaner look */
     scrollbar-width: thin;
     scrollbar-color: var(--primary) transparent;
 }
@@ -123,4 +124,91 @@ select.input-field {
     font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);
+}
+
+/* Language Switcher */
+.lang-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 8px 12px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.lang-btn:hover {
+    background: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.lang-flag {
+    font-size: 18px;
+}
+
+.lang-arrow {
+    transition: transform 0.2s ease;
+    color: var(--text-muted);
+}
+
+.lang-arrow.rotate {
+    transform: rotate(180deg);
+}
+
+.lang-menu {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    min-width: 180px;
+    border: 1px solid #e2e8f0;
+    animation: scaleIn 0.2s ease forwards;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: 0.1s ease;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.lang-option:hover {
+    background: #f1f5f9;
+    color: var(--primary);
+}
+
+@media (max-width: 480px) {
+    .signup-page {
+        padding-top: 80px;
+        align-items: flex-start;
+    }
+
+    .lang-switcher {
+        top: 20px;
+        right: 50%;
+        transform: translateX(50%);
+    }
 }
