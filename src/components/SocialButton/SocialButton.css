@@ -2,29 +2,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
     width: 100%;
-    padding: 12px;
+    padding: 12px 20px;
     background: white;
     border: 1px solid #e2e8f0;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
+    font-size: 15px;
     font-weight: 500;
     color: var(--text-main);
+    transition: var(--transition-normal);
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    font-size: 1rem;
-}
-
-.social-btn:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-    transform: translateY(-1px);
+    gap: 10px;
     box-shadow: var(--shadow-sm);
 }
 
+.social-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 .social-btn:active {
-    transform: scale(0.99);
+    transform: translateY(0);
 }
 
 .social-icon {

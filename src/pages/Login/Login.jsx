@@ -32,20 +32,22 @@ const Login = () => {
         // Mock login API call
         setTimeout(() => {
             setIsLoading(false);
-            // Mock success for any input for now
             console.log('Logged in:', formData);
-            // Navigate to home or dashboard (not implemented yet, just log for now)
             alert("Login Successful! (Mock)");
         }, 1500);
     };
 
     return (
-        <div className="auth-page">
+        <div className="auth-page fade-in">
             {isLoading && <LoadingSpinner fullScreen text="Logging in..." />}
 
-            <div className="auth-container">
-                <button className="btn-text" style={{ marginBottom: 20, padding: 0 }} onClick={() => navigate('/')}>
-                    <ArrowLeft size={20} /> Back
+            <div className="auth-container slide-up">
+                <button
+                    className="btn-text"
+                    style={{ marginBottom: 24, padding: 0, color: 'var(--text-secondary)' }}
+                    onClick={() => navigate('/')}
+                >
+                    <ArrowLeft size={20} /> <span style={{ marginLeft: 4 }}>Back</span>
                 </button>
 
                 <header className="auth-header">
@@ -58,19 +60,17 @@ const Login = () => {
                         label="Email or Username"
                         name="email"
                         type="email"
-                        placeholder="john@example.com"
                         icon={Mail}
                         value={formData.email}
                         onChange={handleChange}
                         error={error && !formData.email ? 'Email is required' : ''}
                     />
 
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div>
                         <Input
                             label="Password"
                             name="password"
                             type="password"
-                            placeholder="••••••••"
                             icon={Lock}
                             value={formData.password}
                             onChange={handleChange}

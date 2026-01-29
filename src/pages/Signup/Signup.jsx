@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, Calendar, ArrowLeft } from 'lucide-react';
+import { User, Mail, Phone, Lock, ArrowLeft } from 'lucide-react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import CountryDropdown from '../../components/CountryDropdown/CountryDropdown';
@@ -74,12 +74,16 @@ const Signup = () => {
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
     return (
-        <div className="signup-page">
+        <div className="signup-page fade-in">
             {isLoading && <LoadingSpinner fullScreen text="Creating Account..." />}
 
-            <div className="signup-container">
-                <button className="btn-text" style={{ padding: 0, marginBottom: 10 }} onClick={() => navigate('/')}>
-                    <ArrowLeft size={20} /> Back
+            <div className="signup-container slide-up">
+                <button
+                    className="btn-text"
+                    style={{ padding: 0, marginBottom: 10, color: 'var(--text-secondary)' }}
+                    onClick={() => navigate('/')}
+                >
+                    <ArrowLeft size={20} /> <span style={{ marginLeft: 4 }}>Back</span>
                 </button>
 
                 <div className="signup-header">
@@ -93,7 +97,6 @@ const Signup = () => {
                     <Input
                         label="Full Name"
                         name="fullName"
-                        placeholder="John Doe"
                         icon={User}
                         value={formData.fullName}
                         onChange={handleChange}
@@ -104,7 +107,6 @@ const Signup = () => {
                         label="Email Address"
                         name="email"
                         type="email"
-                        placeholder="john@example.com"
                         icon={Mail}
                         value={formData.email}
                         onChange={handleChange}
@@ -115,7 +117,6 @@ const Signup = () => {
                         label="Phone Number (Optional)"
                         name="phone"
                         type="tel"
-                        placeholder="+1 234 567 890"
                         icon={Phone}
                         value={formData.phone}
                         onChange={handleChange}
@@ -126,26 +127,50 @@ const Signup = () => {
                         value={formData.country}
                         onChange={handleCountryChange}
                     />
-                    {errors.country && <span className="input-error" style={{ marginTop: -12 }}>{errors.country}</span>}
+                    {errors.country && <span className="input-error-msg" style={{ marginTop: -12 }}>{errors.country}</span>}
 
                     {/* Date of Birth */}
                     <div className="input-group">
-                        <label className="input-label">Date of Birth</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.5fr', gap: 10 }}>
-                            <select name="dobDay" className="input-field" value={formData.dobDay} onChange={handleChange}>
-                                <option value="">Day</option>
-                                {days.map(d => <option key={d} value={d}>{d}</option>)}
-                            </select>
-                            <select name="dobMonth" className="input-field" value={formData.dobMonth} onChange={handleChange}>
-                                <option value="">Month</option>
-                                {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                            </select>
-                            <select name="dobYear" className="input-field" value={formData.dobYear} onChange={handleChange}>
-                                <option value="">Year</option>
-                                {years.map(y => <option key={y} value={y}>{y}</option>)}
-                            </select>
+                        <label className="input-label-static">Date of Birth</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '80px 100px 1fr', gap: 10 }}>
+                            <div className="input-wrapper">
+                                <select
+                                    name="dobDay"
+                                    className="input-field"
+                                    value={formData.dobDay}
+                                    onChange={handleChange}
+                                    style={{ paddingLeft: '16px' }}
+                                >
+                                    <option value="">Day</option>
+                                    {days.map(d => <option key={d} value={d}>{d}</option>)}
+                                </select>
+                            </div>
+                            <div className="input-wrapper">
+                                <select
+                                    name="dobMonth"
+                                    className="input-field"
+                                    value={formData.dobMonth}
+                                    onChange={handleChange}
+                                    style={{ paddingLeft: '16px' }}
+                                >
+                                    <option value="">Month</option>
+                                    {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                                </select>
+                            </div>
+                            <div className="input-wrapper">
+                                <select
+                                    name="dobYear"
+                                    className="input-field"
+                                    value={formData.dobYear}
+                                    onChange={handleChange}
+                                    style={{ paddingLeft: '16px' }}
+                                >
+                                    <option value="">Year</option>
+                                    {years.map(y => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                            </div>
                         </div>
-                        {errors.dob && <span className="input-error">{errors.dob}</span>}
+                        {errors.dob && <span className="input-error-msg">{errors.dob}</span>}
                     </div>
 
                     {/* Security */}
@@ -154,7 +179,6 @@ const Signup = () => {
                         label="Password"
                         name="password"
                         type="password"
-                        placeholder="Create a password"
                         icon={Lock}
                         value={formData.password}
                         onChange={handleChange}
@@ -165,7 +189,6 @@ const Signup = () => {
                         label="Confirm Password"
                         name="confirmPassword"
                         type="password"
-                        placeholder="Confirm password"
                         icon={Lock}
                         value={formData.confirmPassword}
                         onChange={handleChange}

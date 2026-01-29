@@ -1,71 +1,126 @@
 .signup-page {
-    min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    background-color: var(--background);
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: var(--spacing-md);
+    background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    position: relative;
+}
+
+.signup-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.4), rgba(16, 185, 129, 0.4));
+    backdrop-filter: blur(8px);
+    z-index: 0;
 }
 
 .signup-container {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 500px;
-    background: white;
-    padding: 30px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-sm);
-    animation: fadeIn 0.4s ease-out;
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-xl);
+    max-height: 90vh;
+    overflow-y: auto;
+    /* Hide scrollbar for cleaner look */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.signup-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.signup-container::-webkit-scrollbar-thumb {
+    background-color: rgba(37, 99, 235, 0.5);
+    border-radius: 4px;
 }
 
 .signup-header {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 24px;
     text-align: center;
 }
 
 .signup-title {
-    font-size: 1.75rem;
+    font-size: 28px;
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 8px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .signup-subtitle {
-    color: var(--text-muted);
-    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-size: 15px;
 }
 
 .signup-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-md);
+    gap: 16px;
 }
 
 .form-section-title {
-    font-size: 0.85rem;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--text-muted);
-    margin-top: var(--spacing-sm);
-    margin-bottom: var(--spacing-xs);
-    border-bottom: 1px solid #f1f5f9;
+    letter-spacing: 0.05em;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding-bottom: 4px;
 }
 
-@media (min-width: 768px) {
-    .signup-page {
-        padding: var(--spacing-xl);
-        align-items: center;
-        justify-content: center;
-    }
+.auth-footer {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
 
-    .signup-container {
-        border-radius: 24px;
-        box-shadow: var(--shadow-lg);
-        padding: 40px;
-    }
+.auth-link {
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+    transition: var(--transition-normal);
+}
+
+.auth-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Custom Select Styling */
+select.input-field {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    background-color: var(--surface);
+}
+
+.input-label-static {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
 }
