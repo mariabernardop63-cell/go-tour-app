@@ -6,9 +6,9 @@ import LanguageSwitcher from '../../components/LanguageSwitcher/LanguageSwitcher
 import './Welcome.css';
 
 const images = [
-    'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', // Default (Nature/City)
-    'https://images.unsplash.com/photo-1512453979798-5ea90b2009f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', // Dubai
+    'https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', // Lion in Zoo
     'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', // Japan
+    'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80', // Safari/Nature (Backup)
 ];
 
 const Welcome = () => {

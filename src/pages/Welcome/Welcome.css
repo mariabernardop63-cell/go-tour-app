@@ -58,15 +58,21 @@
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
     line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    /* Stronger shadow for readability */
+    color: #ffffff !important;
+    /* Force white */
 }
 
 .welcome-subtitle {
     font-size: 1.125rem;
     margin-bottom: 40px;
-    opacity: 0.9;
+    opacity: 0.95;
+    /* Increased opacity */
     font-weight: 400;
     line-height: 1.5;
+    color: #ffffff !important;
+    /* Force white */
 }
 
 .welcome-actions {
