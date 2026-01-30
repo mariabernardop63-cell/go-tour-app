@@ -257,12 +257,6 @@ select.input-field {
         padding-top: 80px;
         align-items: flex-start;
     }
-
-    .lang-switcher {
-        top: 20px;
-        right: 50%;
-        transform: translateX(50%);
-    }
 }
 
 /* Terms Checkbox */

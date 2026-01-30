@@ -246,12 +246,15 @@ const Signup = () => {
                 )}
 
                 <div className="signup-header">
-                    <h1 className="signup-title">
+                    <h1 className="signup-title">{t.title}</h1>
+                    <p className="signup-subtitle">
                         {step === 1 && t.steps?.step1}
                         {step === 2 && t.steps?.step2}
                         {step === 3 && t.steps?.step3}
-                    </h1>
-                    <p className="signup-subtitle">Step {step} of 3</p>
+                        <span style={{ display: 'block', fontSize: '13px', marginTop: '4px', opacity: 0.8 }}>
+                            Step {step} of 3
+                        </span>
+                    </p>
                 </div>
 
                 <form className="signup-form" onSubmit={(e) => e.preventDefault()}>
