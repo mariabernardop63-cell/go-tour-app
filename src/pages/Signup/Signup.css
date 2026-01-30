@@ -200,6 +200,58 @@ select.input-field {
     color: var(--primary);
 }
 
+/* Phone Field Specifics */
+.phone-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.phone-prefix {
+    background: #f1f5f9;
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-right: 1px solid #e2e8f0;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.phone-field {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    padding-left: 16px;
+}
+
+/* Password Strength */
+.password-strength {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 0 4px;
+}
+
+.strength-bar {
+    height: 4px;
+    width: 100%;
+    background: #e2e8f0;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    font-size: 12px;
+    font-weight: 600;
+    float: right;
+}
+
 @media (max-width: 480px) {
     .signup-page {
         padding-top: 80px;
@@ -211,4 +263,97 @@ select.input-field {
         right: 50%;
         transform: translateX(50%);
     }
+}
+
+/* Terms Checkbox */
+.terms-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 28px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.custom-checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: transparent;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label:hover .custom-checkbox~.checkmark {
+    border-color: var(--primary);
+}
+
+.custom-checkbox:checked~.checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-checkbox:checked~.checkmark:after {
+    display: block;
+}
+
+.checkbox-label .checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.terms-text {
+    line-height: 1.4;
+}
+
+.terms-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.terms-link:hover {
+    color: var(--primary-dark);
+}
+
+/* Captcha */
+.captcha-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.9);
+    transform-origin: center;
+    margin-top: 10px;
 }

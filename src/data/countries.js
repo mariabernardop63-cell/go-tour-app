@@ -23,7 +23,32 @@ export const countries = [
     { code: 'CO', name: 'Colombia', flag: '🇨🇴', dialCode: '+57', lang: 'es' },
     { code: 'AO', name: 'Angola', flag: '🇦🇴', dialCode: '+244', lang: 'pt' },
     { code: 'MZ', name: 'Mozambique', flag: '🇲🇿', dialCode: '+258', lang: 'pt' },
-    // Add more as needed, keeping it lightweight for now
+    { code: 'GH', name: 'Ghana', flag: '🇬🇭', dialCode: '+233', lang: 'en-UK' },
+    { code: 'UG', name: 'Uganda', flag: '🇺🇬', dialCode: '+256', lang: 'sw' },
+    { code: 'RW', name: 'Rwanda', flag: '🇷🇼', dialCode: '+250', lang: 'fr' },
+    { code: 'EG', name: 'Egypt', flag: '🇪🇬', dialCode: '+20', lang: 'en-US' },
+    { code: 'SA', name: 'Saudi Arabia', flag: '🇸🇦', dialCode: '+966', lang: 'en-US' },
+    { code: 'AE', name: 'UAE', flag: '🇦🇪', dialCode: '+971', lang: 'en-US' },
+    { code: 'TR', name: 'Turkey', flag: '🇹🇷', dialCode: '+90', lang: 'en-US' },
+    { code: 'SE', name: 'Sweden', flag: '🇸🇪', dialCode: '+46', lang: 'en-US' },
+    { code: 'NO', name: 'Norway', flag: '🇳🇴', dialCode: '+47', lang: 'en-US' },
+    { code: 'DK', name: 'Denmark', flag: '🇩🇰', dialCode: '+45', lang: 'en-US' },
+    { code: 'FI', name: 'Finland', flag: '🇫🇮', dialCode: '+358', lang: 'en-US' },
+    { code: 'NL', name: 'Netherlands', flag: '🇳🇱', dialCode: '+31', lang: 'en-US' },
+    { code: 'BE', name: 'Belgium', flag: '🇧🇪', dialCode: '+32', lang: 'fr' },
+    { code: 'CH', name: 'Switzerland', flag: '🇨🇭', dialCode: '+41', lang: 'fr' },
+    { code: 'PL', name: 'Poland', flag: '🇵🇱', dialCode: '+48', lang: 'en-US' },
+    { code: 'UA', name: 'Ukraine', flag: '🇺🇦', dialCode: '+380', lang: 'ru' },
+    { code: 'GR', name: 'Greece', flag: '🇬🇷', dialCode: '+30', lang: 'en-US' },
+    { code: 'IL', name: 'Israel', flag: '🇮🇱', dialCode: '+972', lang: 'en-US' },
+    { code: 'TH', name: 'Thailand', flag: '🇹🇭', dialCode: '+66', lang: 'en-US' },
+    { code: 'VN', name: 'Vietnam', flag: '🇻🇳', dialCode: '+84', lang: 'en-US' },
+    { code: 'ID', name: 'Indonesia', flag: '🇮🇩', dialCode: '+62', lang: 'en-US' },
+    { code: 'MY', name: 'Malaysia', flag: '🇲🇾', dialCode: '+60', lang: 'en-US' },
+    { code: 'PH', name: 'Philippines', flag: '🇵🇭', dialCode: '+63', lang: 'en-US' },
+    { code: 'SG', name: 'Singapore', flag: '🇸🇬', dialCode: '+65', lang: 'en-UK' },
+    { code: 'NZ', name: 'New Zealand', flag: '🇳🇿', dialCode: '+64', lang: 'en-UK' },
+    // Simplified list for demo purposes, in a real app this would be even longer
 ];
 
-export const getCountryByCode = (code) => countries.find(c => c.code === code) || countries.find(c => c.code === 'US');
+export const getCountryByCode = (code) => countries.find(c => c.code === code);

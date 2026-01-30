@@ -5,76 +5,69 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import SocialButton from '../../components/SocialButton/SocialButton';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { countries } from '../../data/countries';
-import { translations, languages } from '../../data/translations';
+import { languages } from '../../data/translations';
+import { useApp } from '../../context/AppContext';
 import './Signup.css';
 
 const Signup = () => {
     const navigate = useNavigate();
+    const { langCode, setLangCode, nationality, setNationality, t } = useApp();
     const [isLoading, setIsLoading] = useState(false);
-    const [langCode, setLangCode] = useState('en-US');
     const [showLangMenu, setShowLangMenu] = useState(false);
 
+    // Form State
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         phone: '',
-        nationality: '', // Stores country code
         dobDay: '',
         dobMonth: '',
         dobYear: '',
         password: '',
         confirmPassword: ''
     });
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [captchaVerified, setCaptchaVerified] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const t = translations[langCode] || translations['en-US'];
+    // Password Strength
+    const [passwordStrength, setPasswordStrength] = useState(0); // 0-3
 
-    // IP Detection
+    // Update phone placeholder/code when nationality changes (Initial sync)
     useEffect(() => {
-        const detectIP = async () => {
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
+        // If nationality changes via Context, we might want to reset phone or just prefix
+    }, [nationality]);
 
-                if (data && data.country_code) {
-                    const detectedCountry = countries.find(c => c.code === data.country_code);
-                    if (detectedCountry) {
-                        setFormData(prev => ({
-                            ...prev,
-                            nationality: detectedCountry.code,
-                            phone: detectedCountry.dialCode + ' '
-                        }));
-
-                        // Set language if matches known mapping
-                        if (detectedCountry.lang && translations[detectedCountry.lang]) {
-                            setLangCode(detectedCountry.lang);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("IP Detection failed:", error);
-                // Silently fail to defaults
-            }
-        };
-        detectIP();
-    }, []);
+    const getCurrentCountry = () => countries.find(c => c.code === nationality) || countries[0];
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (errors[e.target.name]) {
-            setErrors({ ...errors, [e.target.name]: '' });
+        const { name, value } = e.target;
+
+        // Detailed Password Strength Calc
+        if (name === 'password') {
+            let strength = 0;
+            if (value.length > 5) strength += 1; // Good length
+            if (/[A-Z]/.test(value) && /[0-9]/.test(value)) strength += 1; // Mixed chars
+            if (/[^A-Za-z0-9]/.test(value)) strength += 1; // Special chars
+            setPasswordStrength(strength);
+        }
+
+        // Phone Validation (Input constraints)
+        if (name === 'phone') {
+            if (!/^\d*$/.test(value)) return;
+            if (value.length > 9) return;
+        }
+
+        setFormData({ ...formData, [name]: value });
+        if (errors[name]) {
+            setErrors({ ...errors, [name]: '' });
         }
     };
 
     const handleNationalityChange = (e) => {
-        const code = e.target.value;
-        const country = countries.find(c => c.code === code);
-        setFormData(prev => ({
-            ...prev,
-            nationality: code,
-            phone: country ? country.dialCode + ' ' : prev.phone
-        }));
+        setNationality(e.target.value);
     };
 
     const handleLanguageSelect = (code) => {
@@ -82,13 +75,27 @@ const Signup = () => {
         setShowLangMenu(false);
     };
 
+    const handleCaptchaChange = (value) => {
+        setCaptchaVerified(!!value);
+        if (!!value && errors.captcha) {
+            setErrors(prev => ({ ...prev, captcha: '' }));
+        }
+    };
+
+    const handleTermsChange = (e) => {
+        setTermsAccepted(e.target.checked);
+        if (e.target.checked && errors.terms) {
+            setErrors(prev => ({ ...prev, terms: '' }));
+        }
+    };
+
     const validate = () => {
         const newErrors = {};
 
-        // Name Validation: First + Last + Vowels
+        // Name Validation: Space + Vowels
         const nameTrimmed = formData.fullName.trim();
         const hasSpace = nameTrimmed.indexOf(' ') > 0;
-        const hasVowel = /[aeiouAEIOU]/.test(nameTrimmed); // Basic vowel check
+        const hasVowel = /[aeiouAEIOU]/.test(nameTrimmed);
 
         if (!formData.fullName) {
             newErrors.fullName = `${t.fullName} ${t.errors.required}`;
@@ -97,12 +104,22 @@ const Signup = () => {
         }
 
         if (!formData.email) newErrors.email = t.errors.email;
-        if (!formData.nationality) newErrors.nationality = `${t.nationality} ${t.errors.required}`;
+        if (!nationality) newErrors.nationality = `${t.nationality} ${t.errors.required}`;
         if (!formData.dobDay || !formData.dobMonth || !formData.dobYear) newErrors.dob = `${t.dob} ${t.errors.required}`;
+
+        // Phone exact 9 digits
+        if (!formData.phone) {
+            // Optional but strict if entered? Assuming required for now as per "Show validation message"
+        } else if (formData.phone.length !== 9) {
+            newErrors.phone = t.errors.phoneLen;
+        }
 
         if (!formData.password) newErrors.password = t.errors.required;
         if (formData.password.length < 6) newErrors.password = t.errors.passwordLen;
         if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = t.errors.match;
+
+        if (!termsAccepted) newErrors.terms = t.errors.terms;
+        if (!captchaVerified) newErrors.captcha = t.errors.captcha;
 
         return newErrors;
     };
@@ -116,11 +133,10 @@ const Signup = () => {
         }
 
         setIsLoading(true);
-        // Mock API
         setTimeout(() => {
             setIsLoading(false);
-            alert("Registration Successful!"); // Translation needed?
-            navigate('/login');
+            // Navigate to OTP with email in state
+            navigate('/otp-verification', { state: { email: formData.email } });
         }, 2000);
     };
 
@@ -130,10 +146,25 @@ const Signup = () => {
     const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 
     const currentLang = languages.find(l => l.code === langCode);
+    const activeCountry = getCurrentCountry();
+
+    const getStrengthLabel = () => {
+        if (!formData.password) return '';
+        if (passwordStrength <= 1) return t.weak;
+        if (passwordStrength === 2) return t.good;
+        return t.veryGood;
+    };
+
+    const getStrengthColor = () => {
+        if (!formData.password) return 'transparent';
+        if (passwordStrength <= 1) return '#ef4444'; // Red
+        if (passwordStrength === 2) return '#f59e0b'; // Yellow
+        return '#10b981'; // Green
+    };
 
     return (
         <div className="signup-page fade-in">
-            {isLoading && <LoadingSpinner fullScreen text="Creating Account..." />}
+            {isLoading && <LoadingSpinner fullScreen text="Processing..." />}
 
             {/* Language Switcher */}
             <div className={`lang-switcher ${showLangMenu ? 'active' : ''}`}>
@@ -175,7 +206,7 @@ const Signup = () => {
                     <Input
                         label={t.fullName}
                         name="fullName"
-                        placeholder={t.fullNamePlaceholder} // Use translations for placeholders too if Input supports it visible
+                        placeholder={t.fullNamePlaceholder}
                         icon={User}
                         value={formData.fullName}
                         onChange={handleChange}
@@ -192,16 +223,16 @@ const Signup = () => {
                         error={errors.email}
                     />
 
-                    {/* Nationality Select (Replaces CountryDropdown) */}
+                    {/* Nationality Select */}
                     <div className="input-group">
                         <div className="input-wrapper">
                             <span className="input-icon" style={{ fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                {formData.nationality ? countries.find(c => c.code === formData.nationality)?.flag : <Globe size={20} />}
+                                {activeCountry?.flag || <Globe size={20} />}
                             </span>
                             <select
                                 name="nationality"
-                                className={`input-field has-icon ${formData.nationality ? 'has-value' : ''}`}
-                                value={formData.nationality}
+                                className={`input-field has-icon has-value`}
+                                value={nationality}
                                 onChange={handleNationalityChange}
                             >
                                 <option value="" disabled></option>
@@ -215,51 +246,49 @@ const Signup = () => {
                         {errors.nationality && <span className="input-error-msg">{errors.nationality}</span>}
                     </div>
 
-                    <Input
-                        label={t.phone}
-                        name="phone"
-                        type="tel"
-                        icon={Phone}
-                        value={formData.phone}
-                        onChange={handleChange}
-                    />
+                    {/* Phone Input with Fixed Code */}
+                    <div className="input-group">
+                        <div className="input-wrapper phone-wrapper">
+                            <div className="phone-prefix">
+                                {activeCountry?.dialCode || '+00'}
+                            </div>
+                            <input
+                                name="phone"
+                                type="tel"
+                                className="input-field phone-field"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                placeholder="999999999"
+                                maxLength={9}
+                            />
+                            <div className="input-icon" style={{ left: 'auto', right: '16px' }}>
+                                <Phone size={20} />
+                            </div>
+                        </div>
+                        <label className="input-label-static" style={{ marginTop: 4, visibility: 'hidden' }}>{t.phone}</label>
+                        <div style={{ position: 'absolute', top: '-22px', fontSize: '14px', color: 'var(--text-secondary)', fontWeight: 500 }}>{t.phone}</div>
+
+                        {errors.phone && <span className="input-error-msg">{errors.phone}</span>}
+                    </div>
 
                     {/* Date of Birth */}
                     <div className="input-group">
                         <label className="input-label-static">{t.dob}</label>
                         <div style={{ display: 'grid', gridTemplateColumns: '80px 100px 1fr', gap: 10 }}>
                             <div className="input-wrapper">
-                                <select
-                                    name="dobDay"
-                                    className="input-field"
-                                    value={formData.dobDay}
-                                    onChange={handleChange}
-                                    style={{ paddingLeft: '16px' }}
-                                >
+                                <select name="dobDay" className="input-field" value={formData.dobDay} onChange={handleChange} style={{ paddingLeft: '16px' }}>
                                     <option value="">DD</option>
                                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                                 </select>
                             </div>
                             <div className="input-wrapper">
-                                <select
-                                    name="dobMonth"
-                                    className="input-field"
-                                    value={formData.dobMonth}
-                                    onChange={handleChange}
-                                    style={{ paddingLeft: '16px' }}
-                                >
+                                <select name="dobMonth" className="input-field" value={formData.dobMonth} onChange={handleChange} style={{ paddingLeft: '16px' }}>
                                     <option value="">MM</option>
                                     {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                                 </select>
                             </div>
                             <div className="input-wrapper">
-                                <select
-                                    name="dobYear"
-                                    className="input-field"
-                                    value={formData.dobYear}
-                                    onChange={handleChange}
-                                    style={{ paddingLeft: '16px' }}
-                                >
+                                <select name="dobYear" className="input-field" value={formData.dobYear} onChange={handleChange} style={{ paddingLeft: '16px' }}>
                                     <option value="">YYYY</option>
                                     {years.map(y => <option key={y} value={y}>{y}</option>)}
                                 </select>
@@ -280,6 +309,24 @@ const Signup = () => {
                         error={errors.password}
                     />
 
+                    {/* Password Strength Meter */}
+                    {formData.password && (
+                        <div className="password-strength">
+                            <div className="strength-bar">
+                                <div
+                                    className="strength-fill"
+                                    style={{
+                                        width: `${((passwordStrength + 1) / 4) * 100}%`,
+                                        backgroundColor: getStrengthColor()
+                                    }}
+                                ></div>
+                            </div>
+                            <span className="strength-text" style={{ color: getStrengthColor() }}>
+                                {t.passwordStrength} {getStrengthLabel()}
+                            </span>
+                        </div>
+                    )}
+
                     <Input
                         label={t.confirmPassword}
                         name="confirmPassword"
@@ -289,6 +336,35 @@ const Signup = () => {
                         onChange={handleChange}
                         error={errors.confirmPassword}
                     />
+
+                    {/* Terms & Conditions */}
+                    <div className="terms-container" style={{ margin: '16px 0' }}>
+                        <label className="checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={termsAccepted}
+                                onChange={handleTermsChange}
+                                className="custom-checkbox"
+                            />
+                            <span className="checkmark"></span>
+                            <span className="terms-text">
+                                {t.terms.agree}
+                                <span className="terms-link" onClick={(e) => { e.preventDefault(); alert("Open Terms Modal"); }}>
+                                    {t.terms.link}
+                                </span>
+                            </span>
+                        </label>
+                        {errors.terms && <div className="input-error-msg" style={{ marginTop: 4 }}>{errors.terms}</div>}
+                    </div>
+
+                    {/* CAPTCHA */}
+                    <div className="captcha-container" style={{ marginBottom: 20 }}>
+                        <ReCAPTCHA
+                            sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // Test Key
+                            onChange={handleCaptchaChange}
+                        />
+                        {errors.captcha && <div className="input-error-msg" style={{ marginTop: 4 }}>{errors.captcha}</div>}
+                    </div>
 
                     <Button type="submit" fullWidth size="lg" style={{ marginTop: 10 }}>{t.registerBtn}</Button>
 
