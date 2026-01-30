@@ -76,7 +76,9 @@ const Login = () => {
                             onChange={handleChange}
                             error={error && !formData.password ? 'Password is required' : ''}
                         />
-                        <span className="forgot-password">Forgot Password?</span>
+                        <span className="forgot-password" onClick={() => navigate('/forgot-password')}>
+                            Forgot Password?
+                        </span>
                     </div>
 
                     <div className="auth-actions">

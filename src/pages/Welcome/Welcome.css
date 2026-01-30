@@ -1,16 +1,34 @@
 .welcome-page {
-    height: 100vh;
-    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2021&q=80');
-    background-size: cover;
-    background-position: center;
-    padding: var(--spacing-xl);
-    color: white;
+    min-height: 100vh;
+    padding: var(--spacing-lg);
     position: relative;
     overflow: hidden;
+}
+
+/* Slideshow Backgrounds */
+.welcome-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 0;
+}
+
+.welcome-bg.active {
+    opacity: 1;
+}
+
+.welcome-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
 }
 
 .welcome-content {

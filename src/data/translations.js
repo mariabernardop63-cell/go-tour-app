@@ -128,6 +128,22 @@ export const translations = {
             terms: 'Você deve concordar com os Termos e Condições',
             captcha: 'Por favor, verifique o CAPTCHA'
         },
+        steps: {
+            step1: 'Informações Básicas',
+            step2: 'Detalhes Pessoais',
+            step3: 'Segurança'
+        },
+        buttons: {
+            next: 'Próximo',
+            back: 'Voltar',
+            sendCode: 'Enviar Código'
+        },
+        forgotPassword: {
+            title: 'Redefinir Senha',
+            subtitle: 'Insira seu email ou nome de usuário para receber um código de verificação.',
+            inputLabel: 'Email ou Nome de Usuário',
+            success: 'Um código de verificação foi enviado para seu email.'
+        },
         otp: {
             title: 'Verifique Sua Conta',
             subtitle: 'Enviamos um código de verificação para',
@@ -175,6 +191,22 @@ export const translations = {
             phoneLen: 'El número de teléfono debe tener exactamente 9 dígitos',
             terms: 'Debes aceptar los Términos y Condiciones',
             captcha: 'Por favor verifica el CAPTCHA'
+        },
+        steps: {
+            step1: 'Información Básica',
+            step2: 'Detalles Personales',
+            step3: 'Seguridad'
+        },
+        buttons: {
+            next: 'Siguiente',
+            back: 'Atrás',
+            sendCode: 'Enviar Código'
+        },
+        forgotPassword: {
+            title: 'Restablecer Contraseña',
+            subtitle: 'Ingresa tu correo o nombre de usuario para recibir un código.',
+            inputLabel: 'Correo o Usuario',
+            success: 'Se ha enviado un código de verificación a tu correo.'
         },
         otp: {
             title: 'Verifica Tu Cuenta',
@@ -224,6 +256,22 @@ export const translations = {
             terms: 'Vous devez accepter les Termes et Conditions',
             captcha: 'Veuillez vérifier le CAPTCHA'
         },
+        steps: {
+            step1: 'Informations de Base',
+            step2: 'Détails Personnels',
+            step3: 'Sécurité'
+        },
+        buttons: {
+            next: 'Suivant',
+            back: 'Retour',
+            sendCode: 'Envoyer le Code'
+        },
+        forgotPassword: {
+            title: 'Réinitialiser le Mot de Passe',
+            subtitle: 'Entrez votre email ou nom d\'utilisateur pour recevoir un code.',
+            inputLabel: 'Email ou Nom d\'utilisateur',
+            success: 'Un code de vérification a été envoyé à votre adresse email.'
+        },
         otp: {
             title: 'Vérifiez Votre Compte',
             subtitle: 'Nous avons envoyé un code de vérification à',
@@ -272,6 +320,22 @@ export const translations = {
             terms: 'Вы должны согласиться с Условиями и Положениями',
             captcha: 'Пожалуйста, проверьте CAPTCHA'
         },
+        steps: {
+            step1: 'Основная Информация',
+            step2: 'Личные Данные',
+            step3: 'Безопасность'
+        },
+        buttons: {
+            next: 'Далее',
+            back: 'Назад',
+            sendCode: 'Отправить Код'
+        },
+        forgotPassword: {
+            title: 'Сброс Пароля',
+            subtitle: 'Введите email или имя пользователя для получения кода.',
+            inputLabel: 'Email или Имя Пользователя',
+            success: 'Код подтверждения был отправлен на ваш email.'
+        },
         otp: {
             title: 'Подтвердите Свой Аккаунт',
             subtitle: 'Мы отправили код подтверждения на',
@@ -319,6 +383,22 @@ export const translations = {
             phoneLen: 'Nambari ya simu lazima iwe na tarakimu 9 haswa',
             terms: 'Lazima ukubali Sheria na Masharti',
             captcha: 'Tafadhali thibitisha CAPTCHA'
+        },
+        steps: {
+            step1: 'Maelezo ya Kimsingi',
+            step2: 'Maelezo ya Kibinafsi',
+            step3: 'Usalama'
+        },
+        buttons: {
+            next: 'Inayofuata',
+            back: 'Nyuma',
+            sendCode: 'Tuma Nambari'
+        },
+        forgotPassword: {
+            title: 'Weka Upya Nenosiri',
+            subtitle: 'Ingiza barua pepe au jina la mtumiaji ili kupokea nambari ya uthibitishaji.',
+            inputLabel: 'Barua Pepe au Jina la Mtumiaji',
+            success: 'Nambari ya uthibitishaji imetumwa kwa barua pepe yako.'
         },
         otp: {
             title: 'Thibitisha Akaunti Yako',
