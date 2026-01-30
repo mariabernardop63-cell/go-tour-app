@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, ArrowLeft, Globe, ChevronDown, Calendar, CheckCircle } from 'lucide-react';
+import { User, Mail, Phone, Lock, ArrowLeft, Globe } from 'lucide-react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import SocialButton from '../../components/SocialButton/SocialButton';
