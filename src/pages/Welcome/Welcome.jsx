@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import Button from '../../components/Button/Button';
+import LanguageSwitcher from '../../components/LanguageSwitcher/LanguageSwitcher';
 import './Welcome.css';
 
 const images = [
@@ -24,6 +25,7 @@ const Welcome = () => {
 
     return (
         <div className="welcome-page">
+            <LanguageSwitcher />
             {/* Background Slideshow */}
             {images.map((img, index) => (
                 <div

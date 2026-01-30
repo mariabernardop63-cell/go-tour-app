@@ -9,13 +9,13 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { countries } from '../../data/countries';
 import { languages } from '../../data/translations';
 import { useApp } from '../../context/AppContext';
+import LanguageSwitcher from '../../components/LanguageSwitcher/LanguageSwitcher';
 import './Signup.css';
 
 const Signup = () => {
     const navigate = useNavigate();
     const { langCode, setLangCode, nationality, setNationality, t } = useApp();
     const [isLoading, setIsLoading] = useState(false);
-    const [showLangMenu, setShowLangMenu] = useState(false);
 
     // Multi-Step State
     const [step, setStep] = useState(1);
@@ -99,9 +99,8 @@ const Signup = () => {
         setNationality(e.target.value);
     };
 
-    const handleLanguageSelect = (code) => {
-        setLangCode(code);
-        setShowLangMenu(false);
+    const handleNationalityChange = (e) => {
+        setNationality(e.target.value);
     };
 
     const handleCaptchaChange = (value) => {
@@ -215,24 +214,7 @@ const Signup = () => {
             {isLoading && <LoadingSpinner fullScreen text="Creating Account..." />}
 
             {/* Language Switcher */}
-            <div className={`lang-switcher ${showLangMenu ? 'active' : ''}`}>
-                <button className="lang-btn" onClick={() => setShowLangMenu(!showLangMenu)} type="button">
-                    <span className="lang-flag">{currentLang?.flag}</span>
-                    <span className="lang-name">{currentLang?.code.toUpperCase()}</span>
-                    <ChevronDown size={14} className={`lang-arrow ${showLangMenu ? 'rotate' : ''}`} />
-                </button>
-
-                {showLangMenu && (
-                    <div className="lang-menu scale-in">
-                        {languages.map(l => (
-                            <div key={l.code} className="lang-option" onClick={() => handleLanguageSelect(l.code)}>
-                                <span className="lang-flag">{l.flag}</span>
-                                {l.name}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            <LanguageSwitcher />
 
             <div className="signup-container slide-up">
                 {step === 1 && (

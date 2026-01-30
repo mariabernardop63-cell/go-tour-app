@@ -5,6 +5,7 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import SocialButton from '../../components/SocialButton/SocialButton';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import LanguageSwitcher from '../../components/LanguageSwitcher/LanguageSwitcher';
 import './Login.css';
 
 const Login = () => {
@@ -39,6 +40,7 @@ const Login = () => {
 
     return (
         <div className="auth-page fade-in">
+            <LanguageSwitcher />
             {isLoading && <LoadingSpinner fullScreen text="Logging in..." />}
 
             <div className="auth-container slide-up">
