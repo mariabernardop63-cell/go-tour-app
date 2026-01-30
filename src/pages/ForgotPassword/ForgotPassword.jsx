@@ -49,7 +49,7 @@ const ForgotPassword = () => {
 
                 <div className="forgot-header">
                     <div className="icon-circle">
-                        <KeyRound size={32} color="var(--primary)" />
+                        <Lock size={32} color="var(--primary)" />
                     </div>
                     <h1 className="forgot-title">{t.forgotPassword.title}</h1>
                     <p className="forgot-subtitle">{t.forgotPassword.subtitle}</p>

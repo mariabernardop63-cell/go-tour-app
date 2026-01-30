@@ -99,10 +99,6 @@ const Signup = () => {
         setNationality(e.target.value);
     };
 
-    const handleNationalityChange = (e) => {
-        setNationality(e.target.value);
-    };
-
     const handleCaptchaChange = (value) => {
         setCaptchaVerified(!!value);
         if (!!value && errors.captcha) {
